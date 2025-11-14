@@ -12,6 +12,7 @@ interface DisplayedWishProps {
 export default function DisplayedWish({ wishId }: DisplayedWishProps) {
   const [wish, setWish] = useState<Wish | null>(null)
   const [loading, setLoading] = useState(true)
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     const loadWish = () => {
@@ -22,6 +23,14 @@ export default function DisplayedWish({ wishId }: DisplayedWishProps) {
 
     loadWish()
   }, [wishId])
+
+  const handleCopyMessage = () => {
+    if (wish) {
+      navigator.clipboard.writeText(`${wish.senderName}: ${wish.message}`)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
 
   if (loading) {
     return (
@@ -80,6 +89,12 @@ export default function DisplayedWish({ wishId }: DisplayedWishProps) {
           </div>
 
           <div className="flex justify-center gap-4 flex-wrap">
+            <Button
+              onClick={handleCopyMessage}
+              className="bg-gradient-to-r from-pink-400 to-rose-500 hover:from-pink-500 hover:to-rose-600 text-white font-bold px-8 py-3 rounded-full transition-all"
+            >
+              {copied ? "✓ Đã sao chép" : "📋 Sao Chép Lời Chúc"}
+            </Button>
             <Button
               onClick={() => (window.location.href = "/")}
               className="bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-white font-bold px-8 py-3 rounded-full"
